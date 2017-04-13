@@ -5,15 +5,62 @@
             Alarm
         </title>
         <script src="https://coolprogramminguser.github.io/Standards/behavior.js"></script>
+        <script>
+            var countDown;
+            var time;
+            var sounds = [
+                new Sound({"waveform":"sawtooth"}),
+                new Sound({"waveform":"sawtooth", "frequency":460}),
+                new Sound()
+                ];
+            onLoad(function() {
+                getId("start").addEventListener("click", function() {
+                    if (this.innerHTML == "Start") {
+                        this.innerHTML = "Renew";
+                        getId("time").style.display = "none";
+                        getId("time").value = getId("time").value.trim() ? Number(getId("time").value.trim())*60 : 900;
+                        time = Number(getId("time").value);
+                        getTag("h2")[0].innerHTML = "Seconds left: " + time;
+                        countDown = setInterval(function() {
+                            if (time > 0 ) {
+                                time--;
+                                getTag("h2")[0].innerHTML = "Seconds left: " + time;
+                            } else {
+                                sounds[0].start();
+                                sounds[1].start();
+                                setTimeout(function() {
+                                    sounds[0].stop();
+                                    sounds[1].stop();
+                                }, 500);
+                            }
+                        }, 1000);
+                    } else {
+                        time = Number(getId("time").value);
+                    }
+                });
+                getId("stop").addEventListener("click", function() {
+                    if (confirm("Are you sure you want to stop the alarm?")) {
+                        clearInterval(countDown);
+                        getTag("h2")[0].innerHTML = "Seconds left: &infin;";
+                        getId("text").value = "";
+                        getId("text").style.display = "inline-block";
+                        getId("start").innerHTML = "Start";
+                    }
+                });
+            });
+        </script>
     </head>
     <body>
-        <input type="text" placeholder="Time to recur">
+        <h2>
+            Seconds left: &infin;
+        </h2>
+        <input type="text" id="time" placeholder="Time to recur (minutes)">
         <br>
         <br>
-        <button>
+        <button id="start">
             Start
         </button>
-        <button>
+        <button id="stop">
             Stop
         </button>
     </body>
