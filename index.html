@@ -11,7 +11,8 @@
             var sounds = [
                 new Sound({"waveform":"sawtooth", "frequency":400}),
                 new Sound({"waveform":"sawtooth", "frequency":420}),
-                new Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150})
+                new Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
+                new Sound({"waveform":"square", "changeWave":"square", "modulation":2, "hertzChange":100})
                 ];
             window.addEventListener("finished", function() {
                 getId("start").addEventListener("click", function() {
@@ -35,8 +36,11 @@
                                     sounds[0].stop();
                                     sounds[1].stop();
                                 }, 500);
-                                if (time < -7 && !sounds[2].playing) {
+                                if (time < -8 && !sounds[2].playing) {
                                     sounds[2].start();
+                                }
+                                if (time < -16 && !sounds[3].playing) {
+                                    sounds[3].start();
                                 }
                             }
                         }, 1000);
