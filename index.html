@@ -9,9 +9,9 @@
             var countDown;
             var time;
             var sounds = [
-                new Sound({"waveform":"sawtooth"}),
-                new Sound({"waveform":"sawtooth", "frequency":460}),
-                new Sound()
+                new Sound({"waveform":"sawtooth", "frequency":400}),
+                new Sound({"waveform":"sawtooth", "frequency":420}),
+                new Sound({"changeWave":"sawtooth", "modulation":120, "hertzChange":50})
                 ];
             window.addEventListener("finished", function() {
                 getId("start").addEventListener("click", function() {
@@ -28,12 +28,16 @@
                                 getTag("h2")[0].innerHTML = "Seconds left: " + time;
                                 document.title = "Alarm-time: " + time;
                             } else {
+                                time--;
                                 sounds[0].start();
                                 sounds[1].start();
                                 setTimeout(function() {
                                     sounds[0].stop();
                                     sounds[1].stop();
                                 }, 500);
+                                if (time < -7 && !sounds[2].playing) {
+                                    sounds[2].start();
+                                }
                             }
                         }, 1000);
                     } else {
@@ -45,6 +49,9 @@
                 getId("stop").addEventListener("click", function() {
                     if (confirm("Are you sure you want to stop the alarm?")) {
                         clearInterval(countDown);
+                        sounds.forEach(function(sound) {
+                            sound.stop();
+                        });
                         document.title = "Alarm";
                         getTag("h2")[0].innerHTML = "Seconds left: &infin;";
                         getId("time").value = "";
