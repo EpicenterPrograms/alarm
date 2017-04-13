@@ -11,8 +11,7 @@
             var sounds = [
                 new Sound({"waveform":"sawtooth", "frequency":400}),
                 new Sound({"waveform":"sawtooth", "frequency":420}),
-                new Sound({"waveform":"sawtooth", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
-                new Sound({"waveform":"sawtooth", "frequency":460, "changeWave":"sawtooth", "modulation":.5, "hertzChange":150})
+                new Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150})
                 ];
             window.addEventListener("finished", function() {
                 getId("start").addEventListener("click", function() {
@@ -38,11 +37,13 @@
                                 }, 500);
                                 if (time < -7 && !sounds[2].playing) {
                                     sounds[2].start();
-                                    sounds[3].start();
                                 }
                             }
                         }, 1000);
                     } else {
+                        sounds.forEach(function(sound) {
+                            sound.stop();
+                        });
                         time = Number(getId("time").value);
                         getTag("h2")[0].innerHTML = "Seconds left: " + time;
                         document.title = "Alarm-time: " + time;
