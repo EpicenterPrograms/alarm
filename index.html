@@ -13,7 +13,7 @@
                 new Sound({"waveform":"sawtooth", "frequency":460}),
                 new Sound()
                 ];
-            onLoad(function() {
+            window.addEventListener("finished", function() {
                 getId("start").addEventListener("click", function() {
                     if (this.innerHTML == "Start") {
                         this.innerHTML = "Renew";
