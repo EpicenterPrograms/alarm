@@ -9,8 +9,8 @@
             var countDown;
             var time;
             var sounds = [
-                new Sound({"waveform":"sawtooth", "frequency":400}),
-                new Sound({"waveform":"sawtooth", "frequency":420}),
+                new Sound({"waveform":"sawtooth", "frequency":400, "volume":.5}),
+                new Sound({"waveform":"sawtooth", "frequency":420, "volume":.5}),
                 new Sound({"changeWave":"sawtooth", "modulation":.5, "hertzChange":50})
                 ];
             window.addEventListener("finished", function() {
