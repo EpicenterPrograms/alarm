@@ -11,8 +11,8 @@
             var sounds = [
                 new Sound({"waveform":"sawtooth", "frequency":400}),
                 new Sound({"waveform":"sawtooth", "frequency":420}),
-                new Sound({"changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
-                new Sound({"frequency":460, "changeWave":"sawtooth", "modulation":.5, "hertzChange":150})
+                new Sound({"waveform":"sawtooth", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
+                new Sound({"waveform":"sawtooth", "frequency":460, "changeWave":"sawtooth", "modulation":.5, "hertzChange":150})
                 ];
             window.addEventListener("finished", function() {
                 getId("start").addEventListener("click", function() {
@@ -30,8 +30,8 @@
                                 document.title = "Alarm-time: " + time;
                             } else {
                                 time--;
-                                sounds[0].start(.4);
-                                sounds[1].start(.4);
+                                sounds[0].start();
+                                sounds[1].start();
                                 setTimeout(function() {
                                     sounds[0].stop();
                                     sounds[1].stop();
