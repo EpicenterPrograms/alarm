@@ -9,6 +9,7 @@
             var countDown;
             var time;
             var sounds = [
+                new Sound({"waveform":"square"}),
                 new Sound({"waveform":"sawtooth", "frequency":400}),
                 new Sound({"waveform":"sawtooth", "frequency":420}),
                 new Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
@@ -28,19 +29,24 @@
                                 time--;
                                 getTag("h2")[0].innerHTML = "Seconds left: " + time;
                                 document.title = "Alarm-time: " + time;
+                                if (time == 5) {
+                                    // warning tone
+                                    sounds[0].play();
+                                    sounds[0].stop(500);
+                                }
                             } else {
                                 time--;
-                                sounds[0].start();
                                 sounds[1].start();
+                                sounds[2].start();
                                 setTimeout(function() {
-                                    sounds[0].stop();
                                     sounds[1].stop();
+                                    sounds[2].stop();
                                 }, 500);
-                                if (time < -8 && !sounds[2].playing) {
-                                    sounds[2].start();
-                                }
-                                if (time < -16 && !sounds[3].playing) {
+                                if (time < -8 && !sounds[3].playing) {
                                     sounds[3].start();
+                                }
+                                if (time < -16 && !sounds[4].playing) {
+                                    sounds[4].start();
                                 }
                             }
                         }, 1000);
