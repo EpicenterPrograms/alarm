@@ -51,7 +51,6 @@
                         document.title = "Alarm-time: " + time;
                         countDown = setInterval(function() {
                             if (time > 0 ) {
-                                time--;
                                 getTag("h2")[0].innerHTML = "Seconds left: " + time;
                                 document.title = "Alarm-time: " + time;
                                 if (time == 5) {
@@ -59,8 +58,8 @@
                                     sounds[0].start();
                                     sounds[0].stop(1000);
                                 }
-                            } else {
                                 time--;
+                            } else {
                                 sounds[1].start();
                                 sounds[2].start();
                                 setTimeout(function() {
@@ -77,6 +76,7 @@
                                     console.log("time equalled 0");
                                     changeBackground("fast");
                                 }
+                                time--;
                             }
                         }, 1000);
                     } else {
