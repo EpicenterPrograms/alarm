@@ -40,6 +40,30 @@
                     colorNumber += increment;
                 }, repeat);
             }
+            function impede(callback, tryNumber) {
+                if (time < 0) {
+                    var remark,
+                        number1 = Math.round(Math.random()*10),
+                        number2 = Math.round(Math.random()*10),
+                        number3 = Math.round(Math.random()*10),
+                        number4 = Math.round(Math.random()*10),
+                        number5 = Math.round(Math.random()*100);
+                    tryNumber = tryNumber || 0;
+                    if (tryNumber > 0) {
+                        remark = "WRONG!\nStart over!\n";
+                    }
+                    if (prompt("{0}What is {1}×{2}+{3}×{4}?\n(What? You wanted to stop the noise?)".format(remark,number1,number2,number3,number4), number5) == number1 * number2 + number3 * number4) {
+                        changeBackground("slow");
+                        sounds.forEach(function(sound) {
+                            sound.stop();
+                        });
+                        callback();
+                    } else {
+                        tryNumber++;
+                        impede(callback, tryNumber);
+                    }
+                }
+            }
             window.addEventListener("finished", function() {
                 getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
@@ -58,7 +82,6 @@
                                     sounds[0].start();
                                     sounds[0].stop(1000);
                                 } else if (time == 0) {
-                                    console.log("time equalled 0");
                                     changeBackground("fast");
                                 }
                                 time--;
@@ -79,17 +102,24 @@
                             }
                         }, 1000);
                     } else {
-                        changeBackground("slow");
-                        sounds.forEach(function(sound) {
-                            sound.stop();
+                        impede(function() {
+                            time = Number(getId("time").value);
+                            getTag("h2")[0].innerHTML = "Seconds left: " + time;
+                            document.title = "Alarm-time: " + time;
                         });
-                        time = Number(getId("time").value);
-                        getTag("h2")[0].innerHTML = "Seconds left: " + time;
-                        document.title = "Alarm-time: " + time;
                     }
                 });
                 getId("stop").addEventListener("click", function() {
-                    if (confirm("Are you sure you want to stop the alarm?")) {
+                    if (time < 0) {
+                        impede(function() {
+                            clearInterval(countDown);
+                            document.title = "Alarm";
+                            getTag("h2")[0].innerHTML = "Seconds left: &infin;";
+                            getId("time").value = "";
+                            getId("time").style.display = "inline-block";
+                            getId("start").innerHTML = "Start";
+                        });
+                    } else if (confirm("Are you sure you want to stop the alarm?")) {
                         clearInterval(countDown);
                         changeBackground("slow");
                         sounds.forEach(function(sound) {
