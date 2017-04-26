@@ -51,6 +51,8 @@
                     tryNumber = tryNumber || 0;
                     if (tryNumber > 0) {
                         remark = "WRONG!\nStart over!\n";
+                    } else {  // makes sure at least some noise is playing
+                        sounds[3].start();
                     }
                     if (prompt("{0}What is {1}×{2}+{3}×{4}?\n(What? You wanted to stop the noise?)".format(remark,number1,number2,number3,number4), number5) == number1 * number2 + number3 * number4) {
                         changeBackground("slow");
