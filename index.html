@@ -64,6 +64,12 @@
                         tryNumber++;
                         impede(callback, tryNumber);
                     }
+                } else {
+                    changeBackground("slow");
+                    sounds.forEach(function(sound) {
+                        sound.stop();
+                    });
+                    callback();
                 }
             }
             window.addEventListener("finished", function() {
