@@ -8,6 +8,8 @@
         <script>
             var countDown;
             var time;
+            var colorChange;
+            var colorNumber = 0;
             var sounds = [
                 new Sound({"waveform":"square"}),
                 new Sound({"waveform":"sawtooth", "frequency":400}),
@@ -15,6 +17,29 @@
                 new Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
                 new Sound({"waveform":"square", "changeWave":"square", "modulation":2, "hertzChange":100})
                 ];
+            function changeBackground(speed) {
+                var increment,
+                    repeat;
+                if (speed.toLowerCase() == "slow") {
+                    increment = .1;
+                    repeat = 500;
+                } else if (speed.toLowerCase() == "fast") {
+                    increment = .5;
+                    repeat = 20;
+                }
+                if (colorChange) {
+                    clearInterval(colorChange);
+                }
+                colorChange = setInterval(function() {
+                    if (colorNumber > 100) {
+                        colorNumber = 0;
+                    }
+                    var newColor = colorCode(null, colorNumber, [0,0,255], [255,0,0], [0,255,0], [0,0,255]);
+                    document.body.style.backgroundImage = "repeating-linear-gradient({0}, white 100vh, {0} 200vh)".format(newColor);
+                    // The gradient is basically an image.
+                    colorNumber += increment;
+                }, repeat);
+            }
             window.addEventListener("finished", function() {
                 getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
@@ -48,9 +73,13 @@
                                 if (time < -16 && !sounds[4].playing) {
                                     sounds[4].start();
                                 }
+                                if (time == 0) {
+                                    changeBackground("fast");
+                                }
                             }
                         }, 1000);
                     } else {
+                        changeBackground("slow");
                         sounds.forEach(function(sound) {
                             sound.stop();
                         });
@@ -62,6 +91,7 @@
                 getId("stop").addEventListener("click", function() {
                     if (confirm("Are you sure you want to stop the alarm?")) {
                         clearInterval(countDown);
+                        changeBackground("slow");
                         sounds.forEach(function(sound) {
                             sound.stop();
                         });
@@ -72,16 +102,7 @@
                         getId("start").innerHTML = "Start";
                     }
                 });
-                var colorNumber = 0;
-                setInterval(function() {
-                    if (colorNumber > 100) {
-                        colorNumber = 0;
-                    }
-                    var newColor = colorCode(null, colorNumber, [0,0,255], [255,0,0], [0,255,0], [0,0,255]);
-                    document.body.style.backgroundImage = "repeating-linear-gradient({0}, white 100vh, {0} 200vh)".format(newColor);
-                    // The gradient is basically an image.
-                    colorNumber += .1;
-                }, 500);
+                changeBackground("slow");
             });
         </script>
     </head>
