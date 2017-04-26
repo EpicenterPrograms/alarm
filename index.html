@@ -18,23 +18,20 @@
                 new Sound({"waveform":"square", "changeWave":"square", "modulation":2, "hertzChange":100})
                 ];
             function changeBackground(speed) {
-                console.log("ran changeBackground()");
                 var increment,
                     repeat;
                 if (speed.toLowerCase() == "slow") {
                     increment = .1;
                     repeat = 500;
                 } else if (speed.toLowerCase() == "fast") {
-                    increment = .5;
-                    repeat = 20;
+                    increment = .8;
+                    repeat = 8;
                 }
                 if (colorChange) {
-                    console.log("colorChange existed");
                     clearInterval(colorChange);
                 }
                 colorChange = setInterval(function() {
                     if (colorNumber > 100) {
-                        console.log("reset colorNumber");
                         colorNumber = 0;
                     }
                     var newColor = colorCode(null, colorNumber, [0,0,255], [255,0,0], [0,255,0], [0,0,255]);
@@ -83,7 +80,6 @@
                             }
                         }, 1000);
                     } else {
-                        console.log("time was renewed");
                         changeBackground("slow");
                         sounds.forEach(function(sound) {
                             sound.stop();
@@ -95,7 +91,6 @@
                 });
                 getId("stop").addEventListener("click", function() {
                     if (confirm("Are you sure you want to stop the alarm?")) {
-                        console.log("everything was stopped");
                         clearInterval(countDown);
                         changeBackground("slow");
                         sounds.forEach(function(sound) {
@@ -108,8 +103,7 @@
                         getId("start").innerHTML = "Start";
                     }
                 });
-                changeBackground("fast");
-                console.log("changeBackground was started");
+                changeBackground("slow");
             });
         </script>
     </head>
