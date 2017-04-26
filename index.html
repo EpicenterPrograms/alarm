@@ -80,8 +80,8 @@
                     var newColor = colorCode(null, colorNumber, [0,0,255], [255,0,0], [0,255,0], [0,0,255]);
                     document.body.style.backgroundImage = "repeating-linear-gradient({0}, white 100vh, {0} 200vh)".format(newColor);
                     // The gradient is basically an image.
-                    colorNumber += .2;
-                }, 200);
+                    colorNumber += .1;
+                }, 500);
             });
         </script>
     </head>
@@ -95,6 +95,7 @@
         <button id="start">
             Start
         </button>
+        <span>&nbsp;</span>
         <button id="stop">
             Stop
         </button>
