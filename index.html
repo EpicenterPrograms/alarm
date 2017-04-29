@@ -87,7 +87,7 @@
                                 document.title = "Alarm-time: " + time;
                                 if (time == 10) {
                                     // warning tone
-                                    sounds[0].play("a4 a4 a4");
+                                    sounds[0].play("a4 a4 a4", {"attack":10, "noteLength":150, "decay":10});
                                 } else if (time == 0) {
                                     changeBackground("fast");
                                 }
