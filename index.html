@@ -82,16 +82,14 @@
                         getTag("h2")[0].innerHTML = "Seconds left: " + time;
                         document.title = "Alarm-time: " + time;
                         countDown = setInterval(function() {
-                            if (time >= 0 ) {
+                            if (time > 0 ) {
+                                time--;
                                 getTag("h2")[0].innerHTML = "Seconds left: " + time;
                                 document.title = "Alarm-time: " + time;
                                 if (time == 10) {
                                     // warning tone
                                     sounds[0].play("a4 a4 a4", {"attack":10, "noteLength":150, "decay":10});
-                                } else if (time == 0) {
-                                    changeBackground("fast");
                                 }
-                                time--;
                             } else {
                                 sounds[1].start();
                                 sounds[2].start();
@@ -99,6 +97,9 @@
                                     sounds[1].stop();
                                     sounds[2].stop();
                                 }, 500);
+                                if (time == 0) {
+                                    changeBackground("fast");
+                                }
                                 if (time < -8 && !sounds[3].playing) {
                                     sounds[3].start();
                                 }
