@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html class="htmlClass">
     <head>
         <title>
             Alarm
         </title>
+        <script>
+            var Standards = {"simplification" : true};
+        </script>
         <script src="https://coolprogramminguser.github.io/Standards/behavior.js"></script>
         <script>
             var countDown;
@@ -11,11 +14,11 @@
             var colorChange;
             var colorNumber = 0;
             var sounds = [
-                new Sound({"waveform":"square"}),
-                new Sound({"waveform":"sawtooth", "frequency":400}),
-                new Sound({"waveform":"sawtooth", "frequency":420}),
-                new Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
-                new Sound({"waveform":"square", "changeWave":"square", "modulation":2, "hertzChange":100})
+                new S.Sound({"waveform":"square"}),
+                new S.Sound({"waveform":"sawtooth", "frequency":400}),
+                new S.Sound({"waveform":"sawtooth", "frequency":420}),
+                new S.Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
+                new S.Sound({"waveform":"square", "changeWave":"square", "modulation":2, "hertzChange":100})
                 ];
             function changeBackground(speed) {
                 var increment,
@@ -34,7 +37,7 @@
                     if (colorNumber > 100) {
                         colorNumber = 0;
                     }
-                    var newColor = colorCode(null, colorNumber, [0,0,255], [255,0,0], [0,255,0], [0,0,255]);
+                    var newColor = S.colorCode(null, colorNumber, [0,0,255], [255,0,0], [0,255,0], [0,0,255]);
                     document.body.style.backgroundImage = "repeating-linear-gradient({0}, white 100vh, {0} 200vh)".format(newColor);
                     // The gradient is basically an image.
                     colorNumber += increment;
@@ -73,18 +76,18 @@
                 }
             }
             window.addEventListener("finished", function() {
-                getId("start").addEventListener("click", function() {
+                S.getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
                         this.innerHTML = "Renew";
-                        getId("time").style.display = "none";
-                        getId("time").value = getId("time").value.trim() ? Number(getId("time").value.trim())*60 : 900;
-                        time = Number(getId("time").value);
-                        getTag("h2")[0].innerHTML = "Seconds left: " + time;
+                        S.getId("time").style.display = "none";
+                        S.getId("time").value = S.getId("time").value.trim() ? Number(S.getId("time").value.trim())*60 : 900;
+                        time = Number(S.getId("time").value);
+                        S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
                         document.title = "Alarm-time: " + time;
                         countDown = setInterval(function() {
                             if (time > 0 ) {
                                 time--;
-                                getTag("h2")[0].innerHTML = "Seconds left: " + time;
+                                S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
                                 document.title = "Alarm-time: " + time;
                                 if (time == 10) {
                                     // warning tone
@@ -111,21 +114,21 @@
                         }, 1000);
                     } else {
                         impede(function() {
-                            time = Number(getId("time").value);
-                            getTag("h2")[0].innerHTML = "Seconds left: " + time;
+                            time = Number(S.getId("time").value);
+                            S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
                             document.title = "Alarm-time: " + time;
                         });
                     }
                 });
-                getId("stop").addEventListener("click", function() {
+                S.getId("stop").addEventListener("click", function() {
                     if (time < 0) {
                         impede(function() {
                             clearInterval(countDown);
                             document.title = "Alarm";
-                            getTag("h2")[0].innerHTML = "Seconds left: &infin;";
-                            getId("time").value = "";
-                            getId("time").style.display = "inline-block";
-                            getId("start").innerHTML = "Start";
+                            S.getTag("h2")[0].innerHTML = "Seconds left: &infin;";
+                            S.getId("time").value = "";
+                            S.getId("time").style.display = "inline-block";
+                            S.getId("start").innerHTML = "Start";
                         });
                     } else if (confirm("Are you sure you want to stop the alarm?")) {
                         clearInterval(countDown);
@@ -134,10 +137,10 @@
                             sound.stop();
                         });
                         document.title = "Alarm";
-                        getTag("h2")[0].innerHTML = "Seconds left: &infin;";
-                        getId("time").value = "";
-                        getId("time").style.display = "inline-block";
-                        getId("start").innerHTML = "Start";
+                        S.getTag("h2")[0].innerHTML = "Seconds left: &infin;";
+                        S.getId("time").value = "";
+                        S.getId("time").style.display = "inline-block";
+                        S.getId("start").innerHTML = "Start";
                     }
                 });
                 changeBackground("slow");
@@ -145,7 +148,7 @@
         </script>
     </head>
     <body>
-        <h1>
+        <h1 class="mainTitle">
             Alarm
         </h1>
         <section>
