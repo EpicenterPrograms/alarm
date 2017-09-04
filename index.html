@@ -4,12 +4,9 @@
         <title>
             Alarm
         </title>
-        <script>
-            var Standards = {};
-            Standards.options = {"simplification" : true};
-        </script>
         <script src="https://epicenterprograms.github.io/standards/behavior.js"></script>
         <script>
+            var S = Standards;
             var countDown;
             var time;
             var colorChange;
@@ -76,6 +73,29 @@
                     callback();
                 }
             }
+            var timerTone = new S.Sound(),
+                interval1,
+                interval2;
+            S.listen("timer", "click", function() {
+                if (this.innerHTML.trim() == "Start timer") {
+                    this.innerHTML = "Stop timer";
+                    interval1 = setInterval(function() {
+                        timerTone.play("a4--- a4", {attack: 10, noteLength: 100, decay: 10});
+                    }, 1224000);
+                    setTimeout(function() {
+                        if (S.getId("timer").innerHTML.trim() == "Stop timer") {
+                            clearInterval(interval2);
+                            interval2 = setInterval(function() {
+                                timerTone.play("a4 a4---", {attack: 10, noteLength: 100, decay: 10});
+                            }, 1224000);
+                        }
+                    }, 22000);
+                } else {
+                    this.innerHTML = "Start timer";
+                    clearInterval(interval1);
+                    clearInterval(interval2);
+                }
+            });
             window.addEventListener("finished", function() {
                 S.getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
@@ -165,6 +185,11 @@
             </button>
             <button id="stop">
                 Stop
+            </button>
+            <br>
+            <br>
+            <button id="timer">
+                Start timer
             </button>
         </main>
     </body>
