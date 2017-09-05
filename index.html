@@ -80,13 +80,13 @@
                 if (this.innerHTML.trim() == "Start timer") {
                     this.innerHTML = "Stop timer";
                     interval1 = setInterval(function() {
-                        timerTone.play("a4--- a4", {attack: 10, noteLength: 100, decay: 10});
+                        timerTone.play("AEN5A5");
                     }, 1224000);
                     setTimeout(function() {
                         if (S.getId("timer").innerHTML.trim() == "Stop timer") {
                             clearInterval(interval2);
                             interval2 = setInterval(function() {
-                                timerTone.play("a4 a4---", {attack: 10, noteLength: 100, decay: 10});
+                                timerTone.play("A5EN5A");
                             }, 1224000);
                         }
                     }, 22000);
@@ -112,7 +112,7 @@
                                 document.title = "Alarm-time: " + time;
                                 if (time == 10) {
                                     // warning tone
-                                    sounds[0].play("a4 a4 a4", {"attack":10, "noteLength":100, "decay":10});
+                                    sounds[0].play("A A A", {"attack":10, "noteLength":100, "decay":10});
                                 }
                             } else {
                                 sounds[1].start();
