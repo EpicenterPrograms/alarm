@@ -35,7 +35,7 @@
                     if (colorNumber > 100) {
                         colorNumber = 0;
                     }
-                    var newColor = S.colorCode(null, colorNumber, [0,0,255], [255,0,0], [0,255,0], [0,0,255]);
+                    var newColor = S.colorCode(null, colorNumber, [0,0,255], [255,0,255], [255,0,0], [255,255,0], [0,255,0], [0,255,255], [0,0,255]);
                     document.body.style.backgroundImage = "repeating-linear-gradient({0}, white 100vh, {0} 200vh)".format(newColor);
                     // The gradient is basically an image.
                     colorNumber += increment;
