@@ -101,7 +101,7 @@
                     if (this.innerHTML.trim() == "Start") {
                         this.innerHTML = "Renew";
                         S.getId("time").style.display = "none";
-                        S.getId("time").value = S.getId("time").value.trim() ? Number(S.getId("time").value.trim())*60 : 900;
+                        S.getId("time").value = S.getId("time").value.trim() ? Number(S.getId("time").value.trim())*60 : 600;
                         time = Number(S.getId("time").value);
                         S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
                         document.title = "Alarm-time: " + time;
