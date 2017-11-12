@@ -49,7 +49,7 @@
                         number3 = Math.round(Math.random()*10),
                         number4 = Math.round(Math.random()*10),
                         number5 = Math.round(Math.random()*100);
-                    tryNumber = tryNumber || 0;
+                    tryNumber = tryNumber===undefined ? 0 : tryNumber;
                     if (tryNumber > 0) {
                         remark = "WRONG!\nStart over!\n";
                     } else {  // makes sure at least some noise is playing
@@ -80,13 +80,13 @@
                 if (this.innerHTML.trim() == "Start timer") {
                     this.innerHTML = "Stop timer";
                     interval1 = setInterval(function() {
-                        timerTone.play("AEN5A5");
+                        timerTone.play("ae5a5");
                     }, 1224000);
                     setTimeout(function() {
                         if (S.getId("timer").innerHTML.trim() == "Stop timer") {
                             clearInterval(interval2);
                             interval2 = setInterval(function() {
-                                timerTone.play("A5EN5A");
+                                timerTone.play("a5e5a");
                             }, 1224000);
                         }
                     }, 22000);
@@ -96,7 +96,7 @@
                     clearInterval(interval2);
                 }
             });
-            window.addEventListener("finished", function() {
+            S.onLoad(function() {
                 S.getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
                         this.innerHTML = "Renew";
@@ -164,6 +164,7 @@
                         S.getId("start").innerHTML = "Start";
                     }
                 });
+                S.getId("timer").click();
                 changeBackground("slow");
             });
         </script>
