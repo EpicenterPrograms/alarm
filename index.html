@@ -18,6 +18,12 @@
                 new S.Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
                 new S.Sound({"waveform":"square", "changeWave":"square", "modulation":2, "hertzChange":100})
                 ];
+            var timerTone = new S.Sound(),
+                interval1,
+                interval2,
+				interval3,
+				interval4,
+				interval5;
             function changeBackground(speed) {
                 var increment,
                     repeat;
@@ -73,29 +79,49 @@
                     callback();
                 }
             }
-            var timerTone = new S.Sound(),
-                interval1,
-                interval2;
             S.listen("timer", "click", function() {
                 if (this.innerHTML.trim() == "Start timer") {
                     this.innerHTML = "Stop timer";
                     interval1 = setInterval(function() {
                         timerTone.play("ae5a5");
+						interval2 = setTimeout(function() {
+							timerTone.play("a5e5a");
+						}, 22000);
                     }, 1224000);
-                    setTimeout(function() {
-                        if (S.getId("timer").innerHTML.trim() == "Stop timer") {
-                            clearInterval(interval2);
-                            interval2 = setInterval(function() {
-                                timerTone.play("a5e5a");
-                            }, 1224000);
-                        }
-                    }, 22000);
                 } else {
                     this.innerHTML = "Start timer";
-                    clearInterval(interval1);
                     clearInterval(interval2);
+                    clearInterval(interval1);
                 }
             });
+			S.listen("fiveMinutes", "click", function() {
+				if (this.checked) {
+					interval3 = setInterval(function() {
+						timerTone.play("a5a5");
+					}, 300000);
+				} else {
+					clearInterval(interval3);
+				}
+			});
+			S.listen("oneMinute", "click", function() {
+				if (this.checked) {
+					interval4 = setInterval(function() {
+						timerTone.play("a4");
+					}, 60000);
+				} else {
+					clearInterval(interval4);
+				}
+			});
+			S.listen("customRecurrence", "click", function() {
+				if (this.checked) {
+					let recurrence = S.getId("customNumber").value || 10;
+					interval5 = setInterval(function() {
+						timerTone.play("e5sa6");
+					}, recurrence*60000);
+				} else {
+					clearInterval(interval5);
+				}
+			});
             S.onLoad(function() {
                 S.getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
@@ -112,7 +138,7 @@
                                 document.title = "Alarm-time: " + time;
                                 if (time == 10) {
                                     // warning tone
-                                    sounds[0].play("A A A", {"attack":10, "noteLength":100, "decay":10});
+                                    sounds[0].play("a4 a4 a4", {"attack":10, "noteLength":100, "decay":10});
                                 }
                             } else {
                                 sounds[1].start();
@@ -169,6 +195,11 @@
             });
         </script>
         <link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting.css"/>
+		<style>
+			#customNumber {
+				width: 2em;
+			}
+		</style>
     </head>
     <body>
         <h1 class="main-title">
@@ -192,6 +223,17 @@
             <button id="timer">
                 Start timer
             </button>
+			<br>
+			<br>
+			<div class="list">
+				<input type="checkbox" id="fiveMinutes">
+				<label for="fiveMinutes">Make a tone every 5 minutes</label>
+				<br>
+				<input type="checkbox" id="oneMinute">
+				<label for="oneMinute">Make a tone every 1 minute</label>
+				<br>
+				<input type="checkbox" id="customRecurrence">
+				<label for="customRecurrence">Make a tone every <input type="text" id="customNumber"> minutes</label>
         </main>
     </body>
 <html>
