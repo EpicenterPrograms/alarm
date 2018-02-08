@@ -5,6 +5,9 @@
             Alarm
         </title>
         <script src="https://epicenterprograms.github.io/standards/behavior/general.js"></script>
+		<!--
+        <script src="file:///C:/Users/Robert/Documents/GitHub/standards/behavior/general.js"></script>
+		-->
         <script>
 			var S = Standards.general;
             var countDown;
@@ -127,7 +130,7 @@
                     if (this.innerHTML.trim() == "Start") {
                         this.innerHTML = "Renew";
                         S.getId("time").style.display = "none";
-                        S.getId("time").value = S.getId("time").value.trim() ? Number(S.getId("time").value.trim())*60 : 600;
+                        S.getId("time").value = S.getId("time").value.trim() ? Number(S.getId("time").value.trim())*60 : 400;
                         time = Number(S.getId("time").value);
                         S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
                         document.title = "Alarm-time: " + time;
@@ -195,6 +198,9 @@
             });
         </script>
         <link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting/foundation.css">
+		<!--
+        <link rel="stylesheet" href="file:///C:/Users/Robert/Documents/GitHub/standards/formatting/foundation.css">
+		-->
 		<style>
 			#customNumber {
 				width: 2em;
