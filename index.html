@@ -171,26 +171,31 @@
                     }
                 });
                 S.getId("stop").addEventListener("click", function() {
-                    if (time < 0) {
-                        impede(function() {
-                            clearInterval(countDown);
-                            document.title = "Alarm";
-                            S.getTag("h2")[0].innerHTML = "Seconds left: &infin;";
-                            S.getId("time").value = "";
-                            S.getId("time").style.display = "inline-block";
-                            S.getId("start").innerHTML = "Start";
-                        });
-                    } else if (confirm("Are you sure you want to stop the alarm?")) {
-                        clearInterval(countDown);
-                        changeBackground("slow");
-                        sounds.forEach(function(sound) {
-                            sound.stop();
-                        });
-                        document.title = "Alarm";
-                        S.getTag("h2")[0].innerHTML = "Seconds left: &infin;";
-                        S.getId("time").value = "";
-                        S.getId("time").style.display = "inline-block";
-                        S.getId("start").innerHTML = "Start";
+					if (time < 0) {
+						impede(function () {
+							clearInterval(countDown);
+							document.title = "Alarm";
+							S.getTag("h2")[0].innerHTML = "Seconds left: &infin;";
+							S.getId("time").value = "";
+							S.getId("time").style.display = "inline-block";
+							S.getId("start").innerHTML = "Start";
+						});
+					} else {
+						S.makeDialog("Are you sure you want to stop the alarm?",
+							["Yes", function () {
+								clearInterval(countDown);
+								changeBackground("slow");
+								sounds.forEach(function (sound) {
+									sound.stop();
+								});
+								document.title = "Alarm";
+								S.getTag("h2")[0].innerHTML = "Seconds left: &infin;";
+								S.getId("time").value = "";
+								S.getId("time").style.display = "inline-block";
+								S.getId("start").innerHTML = "Start";
+							}],
+							"No"
+						);
                     }
                 });
                 S.getId("timer").click();
