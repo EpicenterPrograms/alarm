@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html class="html-class">
+<!doctype html>
+<html>
     <head>
         <title>
             Alarm
@@ -125,6 +125,19 @@
 					clearInterval(interval5);
 				}
 			});
+			S.listen("soundVolume", "change", function () {
+				if (this.value === undefined) {
+					var volume = 100;
+				} else if (S.getType(Number(this.value)) == "Number") {
+					var volume = Number(this.value);
+				}
+				if (typeof volume !== "undefined") {
+					volume = volume / 100;
+					sounds.forEach(function (sound) {
+						sound.change("maxVolume", volume);
+					});
+				}
+			});
             S.onLoad(function() {
                 S.getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
@@ -234,6 +247,9 @@
             <button id="timer">
                 Start timer
             </button>
+			<br>
+			<br>
+			<input type="text" id="soundVolume" placeholder="Volume (1-100)">
 			<br>
 			<br>
 			<div class="list">
