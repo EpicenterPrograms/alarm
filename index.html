@@ -83,8 +83,8 @@
                 }
             }
             S.listen("timer", "click", function() {
-                if (this.innerHTML.trim() == "Start timer") {
-                    this.innerHTML = "Stop timer";
+                if (this.innerHTML.trim() == "Start eye-strain timer") {
+                    this.innerHTML = "Stop eye-strain timer";
                     interval1 = setInterval(function() {
                         timerTone.play("ae5a5");
 						interval2 = setTimeout(function() {
@@ -92,11 +92,37 @@
 						}, 22000);
                     }, 1224000);
                 } else {
-                    this.innerHTML = "Start timer";
+                    this.innerHTML = "Start eye-strain timer";
                     clearInterval(interval2);
                     clearInterval(interval1);
                 }
-            });
+			});
+			S.listen("distractionButton", "click", function () {
+				let observer;
+				let initialTime;
+				let timeToDoStuff;
+				let lifeCoach = new S.Speaker();
+				if (this.textContent.trim() == "I'm distracted") {
+					this.textContent = "I'm back on track";
+					if (S.getId("distractionTime").value.trim() && S.getId("distractionTime").value.trim().search(/^\d+:\d+$/) > -1) {
+						initialTime = new Date();
+						let time = S.getId("distractionTime").value.trim();
+						time = { hours: Number(time.split(":")[0]), minutes: Number(time.split(":")[1]) };
+						if (initialTime.getHours() > 12 && initialTime.getHours() - 12 <= time.hours) {  /////////////////////////////////////////////////////////
+							time.hours += 12;
+						}
+					} else {
+						initialTime = new Date().getTime();
+						timeToDoStuff = new Date().getTime();
+					}
+					observer = setInterval(function () {
+						lifeCoach.speak("Hey, you need to quit being distracted.");
+					}, 50000);
+				} else {
+					this.textContent = "I'm distracted";
+					clearInterval(observer);
+				}
+			});
 			S.listen("fiveMinutes", "click", function() {
 				if (this.checked) {
 					interval3 = setInterval(function() {
@@ -126,7 +152,7 @@
 				}
 			});
 			S.listen("soundVolume", "change", function () {
-				if (this.value === undefined) {
+				if (this.value == "") {
 					var volume = 100;
 				} else if (S.getType(Number(this.value)) == "Number") {
 					var volume = Number(this.value);
@@ -136,6 +162,7 @@
 					sounds.forEach(function (sound) {
 						sound.change("maxVolume", volume);
 					});
+					sounds[0].play("e5---");
 				}
 			});
             S.onLoad(function() {
@@ -220,6 +247,9 @@
         <link rel="stylesheet" href="file:///C:/Users/Robert/Documents/GitHub/standards/formatting/foundation.css">
 		-->
 		<style>
+			#distractionTime {
+				width: 3em;
+			}
 			#customNumber {
 				width: 2em;
 			}
@@ -245,8 +275,15 @@
             <br>
             <br>
             <button id="timer">
-                Start timer
+                Start eye-strain timer
             </button>
+			<br>
+			<br>
+			<button id="distractionButton">
+				I'm distracted
+			</button>
+			I need to do something at
+			<input type="text" id="distractionTime" placeholder="Time">
 			<br>
 			<br>
 			<input type="text" id="soundVolume" placeholder="Volume (1-100)">
