@@ -14,14 +14,8 @@
             var time;
             var colorChange;
             var colorNumber = 0;
-            var sounds = [
-                new S.Sound({"waveform":"square"}),
-                new S.Sound({"waveform":"sawtooth", "frequency":400}),
-                new S.Sound({"waveform":"sawtooth", "frequency":420}),
-                new S.Sound({"waveform":"square", "changeWave":"sawtooth", "modulation":.5, "hertzChange":150}),
-                new S.Sound({"waveform":"square", "changeWave":"square", "modulation":2, "hertzChange":100})
-                ];
-            var timerTone = new S.Sound(),
+			var sounds;
+            var timerTone,
                 interval1,
                 interval2,
 				interval3,
@@ -165,7 +159,29 @@
 					sounds[0].play("e5---");
 				}
 			});
-            S.onLoad(function() {
+			S.onLoad(function () {
+				S.makeToneGenerator(true, function () {
+					sounds = [
+						new S.Sound({ "waveform": "square" }),
+						new S.Sound({ "waveform": "sawtooth", "frequency": 400 }),
+						new S.Sound({ "waveform": "sawtooth", "frequency": 420 }),
+						new S.Sound({ "waveform": "square", "changeWave": "sawtooth", "modulation": .5, "hertzChange": 150 }),
+						new S.Sound({ "waveform": "square", "changeWave": "square", "modulation": 2, "hertzChange": 100 })
+					];
+					timerTone = new S.Sound();
+				}, function () {
+					S.makeDialog("Dude, don't you even understand the whole point of this webpage?", ["Yes", function () {
+						S.makeDialog("You're insane. If you decide to be sensible, you can refresh the page.");
+					}], ["No", function () {
+						S.makeDialog("Would you like to learn?", ["Yes", function () {
+							S.makeDialog("This is a webpage which uses various tones to do things such as keep you awake, reduce your eye-strain, and/or alert you to how much time has passed. Preventing the production of tones pretty much defeats the purpose of this page. If you'd like to change your mind, you can refresh the page to get another chance to go though this.");
+						}], ["No", function () {
+							S.makeDialog("Get out.", ["Okay", function () {
+								window.open("", "_self").close();
+							}]);
+						}]);
+					}]);
+				});
                 S.getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
                         this.innerHTML = "Renew";
