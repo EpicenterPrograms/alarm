@@ -252,7 +252,9 @@
                             S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
 							document.title = "Alarm-time: " + time;
 							if (wastedTime > Number(S.getId("time").value)) {
-								new S.Speaker().speak("You've wasted {0} minutes.".format(Math.round(wastedTime / 6) / 10));
+								setTimeout(function () {
+									new S.Speaker().speak("You've wasted {0} minutes.".format(Math.round(wastedTime / 6) / 10));
+								}, 1000);
 							}
                         });
                     }
