@@ -11,7 +11,7 @@
         <script>
 			var S = Standards.general;
             var countDown;
-            var time;
+            var time;  // the number of seconds left before the alarm goes off
             var colorChange;
             var colorNumber = 0;
 			var sounds;
@@ -22,6 +22,7 @@
 				interval3,
 				interval4,
 				interval5;
+			var wastedTime = 0;
             function changeBackground(speed) {
                 var increment,
                     repeat;
@@ -51,19 +52,19 @@
                         number1 = Math.round(Math.random()*10),
                         number2 = Math.round(Math.random()*10),
                         number3 = Math.round(Math.random()*10),
-                        number4 = Math.round(Math.random()*10),
-                        number5 = Math.round(Math.random()*100);
+                        number4 = Math.round(Math.random()*10);
                     tryNumber = tryNumber===undefined ? 0 : tryNumber;
                     if (tryNumber > 0) {
                         remark = "WRONG!\nStart over!\n";
                     } else {  // makes sure at least some noise is playing
                         sounds[3].start();
                     }
-                    if (prompt("{0}What is {1}×{2}+{3}×{4}?\n(What? You wanted to stop the noise?)".format(remark,number1,number2,number3,number4), number5) == number1 * number2 + number3 * number4) {
+                    if (prompt("{0}What is {1}×{2}+{3}×{4}?\n(What? You wanted to stop the noise?)".format(remark,number1,number2,number3,number4)) == number1 * number2 + number3 * number4) {
                         changeBackground("slow");
                         sounds.forEach(function(sound) {
                             sound.stop();
-                        });
+						});
+						wastedTime += Number(S.getId("time").value);
                         callback();
                     } else {
                         tryNumber++;
@@ -73,7 +74,10 @@
                     changeBackground("slow");
                     sounds.forEach(function(sound) {
                         sound.stop();
-                    });
+					});
+					if (time > 3) {
+						wastedTime = 0;
+					}
                     callback();
                 }
             }
@@ -199,6 +203,9 @@
 						}]);
 					}]);
 				});
+
+
+				// activates the alarm countdown
                 S.getId("start").addEventListener("click", function() {
                     if (this.innerHTML.trim() == "Start") {
                         this.innerHTML = "Renew";
@@ -208,15 +215,19 @@
                         S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
                         document.title = "Alarm-time: " + time;
                         countDown = setInterval(function() {
-                            if (time > 0 ) {
+                            if (time > 0 ) {  // if there's still time left
                                 time--;
                                 S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
-                                document.title = "Alarm-time: " + time;
-                                if (time == 10) {
-                                    // warning tone
-                                    sounds[0].play("a4 a4 a4", {"attack":10, "noteLength":100, "decay":10});
-                                }
-                            } else {
+								document.title = "Alarm-time: " + time;
+								// plays warning tones when time is running out
+								if (time == 10) {
+									sounds[0].play("a4 a4 a4", { "attack": 10, "noteLength": 100, "decay": 10 });
+								} else if (time == 20) {
+									sounds[0].play("a4 a4", { "attack": 10, "noteLength": 100, "decay": 10 });
+								} else if (time == 30) {
+									sounds[0].play("a4", { "attack": 10, "noteLength": 100, "decay": 10 });
+								}
+                            } else {  // make the alarm play
                                 sounds[1].start();
                                 sounds[2].start();
                                 setTimeout(function() {
@@ -239,10 +250,14 @@
                         impede(function() {
                             time = Number(S.getId("time").value);
                             S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
-                            document.title = "Alarm-time: " + time;
+							document.title = "Alarm-time: " + time;
+							if (wastedTime > Number(S.getId("time").value)) {
+								new S.Speaker().speak("You've wasted {0} minutes.".format(Math.round(wastedTime / 6) / 10));
+							}
                         });
                     }
-                });
+				});
+
                 S.getId("stop").addEventListener("click", function() {
 					if (time < 0) {
 						impede(function () {
