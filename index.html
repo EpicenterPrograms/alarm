@@ -16,12 +16,15 @@
             var colorNumber = 0;
 			var sounds;
 			var nagger;
-            var timerTone,
-                interval1,
-                interval2,
+			var timerTone,
+				interval1,
+				interval2,
 				interval3,
 				interval4,
-				interval5;
+				interval5,
+				progress3,
+				progress4,
+				progress5;
 			var wastedTime = 0;
             function changeBackground(speed) {
                 var increment,
@@ -146,30 +149,63 @@
 			});
 			S.listen("fiveMinutes", "click", function() {
 				if (this.checked) {
+					let time = 0;
 					interval3 = setInterval(function() {
 						timerTone.play("a5sa4");
 					}, 300000);
+					progress3 = setInterval(function () {
+						if (time >= 300000) {
+							time = 3000;
+						} else {
+							time += 3000;
+						}
+						S.getId("fiveMinutesProgress").value = time / 300000;
+					}, 3000);
 				} else {
 					clearInterval(interval3);
+					clearInterval(progress3);
+					S.getId("fiveMinutesProgress").value = 0;
 				}
 			});
 			S.listen("oneMinute", "click", function() {
 				if (this.checked) {
+					let time = 0;
 					interval4 = setInterval(function() {
 						timerTone.play("a4-");
 					}, 60000);
+					progress4 = setInterval(function () {
+						if (time >= 60000) {
+							time = 600;
+						} else {
+							time += 600;
+						}
+						S.getId("oneMinuteProgress").value = time / 60000;
+					}, 600);
 				} else {
 					clearInterval(interval4);
+					clearInterval(progress4);
+					S.getId("oneMinuteProgress").value = 0;
 				}
 			});
 			S.listen("customRecurrence", "click", function() {
 				if (this.checked) {
+					let time = 0;
 					let recurrence = S.getId("customNumber").value || 10;
 					interval5 = setInterval(function() {
 						timerTone.play("e5sa6");
-					}, recurrence*60000);
+					}, recurrence * 60000);
+					progress5 = setInterval(function () {
+						if (time >= recurrence * 60000) {
+							time = recurrence * 600;
+						} else {
+							time += recurrence * 600;
+						}
+						S.getId("customProgress").value = time / (recurrence * 60000);
+					}, recurrence * 600);
 				} else {
 					clearInterval(interval5);
+					clearInterval(progress5);
+					S.getId("customProgress").value = 0;
 				}
 			});
 			S.listen("soundVolume", "change", function () {
@@ -303,6 +339,26 @@
 			#customNumber {
 				width: 2em;
 			}
+			progress {  /* Use [value] for only progress bars that show a specific value at a given time. */
+				border: .05rem solid darkgray;
+				border-radius: .25rem;
+				background: lightgray;
+			}
+			progress {
+				color: #0c0;
+			}
+			progress::-moz-progress-bar {
+				border-radius: .25rem;
+				background: lightgray;
+			}
+			progress::-webkit-progress-value {
+				border-radius: .25rem;
+				background: #0c0;
+			}
+			progress::-webkit-progress-bar {
+				border-radius: .25rem;
+				background: lightgray;
+			}
 		</style>
     </head>
     <body>
@@ -342,13 +398,16 @@
 			<br>
 			<div class="list">
 				<input type="checkbox" id="fiveMinutes">
-				<label for="fiveMinutes">Make a tone every 5 minutes</label>
+				<label for="fiveMinutes">Make a tone every 5 minutes</label><br>
+				<progress id="fiveMinutesProgress" value="0"></progress>
 				<br>
 				<input type="checkbox" id="oneMinute">
-				<label for="oneMinute">Make a tone every 1 minute</label>
+				<label for="oneMinute">Make a tone every 1 minute</label><br>
+				<progress id="oneMinuteProgress" value="0"></progress>
 				<br>
 				<input type="checkbox" id="customRecurrence">
-				<label for="customRecurrence">Make a tone every <input type="text" id="customNumber"> minutes</label>
+				<label for="customRecurrence">Make a tone every <input type="text" id="customNumber"> minutes</label><br>
+				<progress id="customProgress" value="0"></progress>
 			</div>
         </main>
     </body>
