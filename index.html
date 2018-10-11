@@ -26,6 +26,14 @@
 				progress4,
 				progress5;
 			var wastedTime = 0;
+			var lifeCoach = new S.Speaker();
+
+			var idleTime = 0;  // how long the website has been idle (in seconds)
+			var focused = true;  // whether the tab that has the website is currently focused //// unused
+			var visits = 1;  // how many times the website was visited since being loaded
+
+
+
             function changeBackground(speed) {
                 var increment,
                     repeat;
@@ -48,7 +56,8 @@
                     // The gradient is basically an image.
                     colorNumber += increment;
                 }, repeat);
-            }
+			}
+
             function impede(callback, tryNumber) {
                 if (time < 0) {
                     var remark = "",
@@ -83,7 +92,8 @@
 					}
                     callback();
                 }
-            }
+			}
+
             S.listen("timer", "click", function() {
                 if (this.innerHTML.trim() == "Start eye-strain timer") {
                     this.innerHTML = "Stop eye-strain timer";
@@ -99,10 +109,10 @@
                     clearInterval(interval1);
                 }
 			});
+
 			S.listen("distractionButton", "click", function () {
 				let initialTime;
 				let timeToDoStuff;
-				let lifeCoach = new S.Speaker();
 				if (this.textContent.trim() == "I'm distracted") {
 					if (S.getId("distractionTime").value.trim() && S.getId("distractionTime").value.trim().search(/^\d+:\d+$/) > -1) {
 						this.textContent = "I'm back on track";
@@ -147,6 +157,7 @@
 					clearTimeout(nagger);
 				}
 			});
+
 			S.listen("fiveMinutes", "click", function() {
 				if (this.checked) {
 					let time = 0;
@@ -167,6 +178,7 @@
 					S.getId("fiveMinutesProgress").value = 0;
 				}
 			});
+
 			S.listen("oneMinute", "click", function() {
 				if (this.checked) {
 					let time = 0;
@@ -187,6 +199,7 @@
 					S.getId("oneMinuteProgress").value = 0;
 				}
 			});
+
 			S.listen("customRecurrence", "click", function() {
 				if (this.checked) {
 					let time = 0;
@@ -208,6 +221,7 @@
 					S.getId("customProgress").value = 0;
 				}
 			});
+
 			S.listen("soundVolume", "change", function () {
 				let volume = Number(this.value) / 100;
 				sounds.forEach(function (sound) {
@@ -216,6 +230,21 @@
 				timerTone.change("maxVolume", volume);
 				sounds[0].play("e5---");
 			});
+
+			// sets up idleness tracking
+			window.addEventListener("focus", function () {
+				focused = true;
+				idleTime = 0;
+			});
+			window.addEventListener("blur", function () {
+				focused = false;
+				idleTime = 0;
+			});
+			document.addEventListener("mousemove", function () { idleTime = 0; });
+			document.addEventListener("mouseup", function () { idleTime = 0; });
+
+
+
 			S.onLoad(function () {
 				S.makeToneGenerator(true, function () {
 					sounds = [
@@ -289,8 +318,8 @@
 							document.title = "Alarm-time: " + time;
 							if (wastedTime > Number(S.getId("time").value)) {
 								setTimeout(function () {
-									new S.Speaker().speak("You've wasted {0} minutes.".format(Math.round(wastedTime / 6) / 10));
-								}, 1000);
+									lifeCoach.speak("You've wasted {0} minutes. That's right, {0} minutes.".format(Math.round(wastedTime / 60)));
+								}, 1500);
 							}
                         });
                     }
@@ -323,7 +352,26 @@
 							"No"
 						);
                     }
-                });
+				});
+
+				// tracks idle time
+				setInterval(function () {
+					idleTime += 10;
+					let time = new Date().getHours();
+					if (time > 21 || time < 8) {
+						if (idleTime == 1200) {  // if the website has been idle for 20 minutes
+							lifeCoach.speak("It's been a while since I've noticed your activity; are you still awake?");
+						} else if (idleTime == 1500) {  // if the website has been idle for 25 minutes
+							lifeCoach.speak("I'm going to turn on the alarm soon if you don't check in with me.");
+						} else if (idleTime == 1800) {  // if the website has been idle for 30 minutes
+							S.getId("start").click();
+							lifeCoach.speak("I've turned on the timer.");
+						}
+					} else {
+						idleTime = 0;
+					}
+				}, 10000);
+
                 S.getId("timer").click();
                 changeBackground("slow");
             });
