@@ -16,6 +16,8 @@
             var colorNumber = 0;
 			var sounds;
 			var nagger;
+			var strategy = "annoy";
+			var methodNumber = 1;
 			var timerTone,
 				interval1,
 				interval2,
@@ -77,6 +79,7 @@
                             sound.stop();
 						});
 						wastedTime += Number(S.getId("time").value);
+						strategy = "annoy";
                         callback();
                     } else {
                         tryNumber++;
@@ -292,23 +295,97 @@
 								} else if (time == 30) {
 									sounds[0].play("a4", { "attack": 10, "noteLength": 100, "decay": 10 });
 								}
-                            } else {  // make the alarm play
-                                sounds[1].start();
-                                sounds[2].start();
-                                setTimeout(function() {
-                                    sounds[1].stop();
-                                    sounds[2].stop();
-                                }, 500);
-                                if (time == 0) {
-                                    changeBackground("fast");
-                                }
-                                if (time < -8 && !sounds[3].playing) {
-                                    sounds[3].start();
-                                }
-                                if (time < -16 && !sounds[4].playing) {
-                                    sounds[4].start();
-                                }
-                                time--;
+							} else {  // make the alarm play
+								/// annoy, wait, annoy, wait, alternate, wait, random
+								if (strategy == "annoy") {
+									sounds[1].start();
+									sounds[2].start();
+									setTimeout(function () {
+										sounds[1].stop();
+										sounds[2].stop();
+									}, 500);
+									if (time == 0) {
+										changeBackground("fast");
+									}
+									if (time < -8 && !sounds[3].playing) {
+										sounds[3].start();
+									}
+									if (time < -16 && !sounds[4].playing) {
+										sounds[4].start();
+									}
+									if (time == -180) {  // if the alarm has been going off for 3 minutes
+										sounds.forEach(function (sound) {
+											sound.stop();
+										});
+										strategy = "wait";
+									}
+									if (time == -450) {  // if the alarm has been going off another 3 minutes
+										sounds.forEach(function (sound) {
+											sound.stop();
+										});
+										strategy = "wait";
+									}
+								} else if (strategy == "wait") {
+									if (time == -270) {  // if the alarm has been paused for 1.5 minutes
+										strategy = "annoy";
+									}
+									if (time == -540) {  // if the alarm has been paused for another 1.5 minutes
+										sounds[4].start();
+										strategy = "alternate";
+									}
+									if (time == -810) {  // if it's been another 1.5 minutes
+										strategy = "random";
+									}
+								} else if (strategy == "alternate") {
+									if (time % 5 == 0) {
+										if (time % 2 == 0) {
+											sounds[3].stop();
+											sounds[4].start();
+										} else {
+											sounds[4].stop();
+											sounds[3].start();
+										}
+									}
+									if (time == -720) {  // if it's been another 3 minutes
+										sounds[4].stop();
+										strategy = "wait";
+									}
+								} else if (strategy == "random") {
+									if (time % 15 == 0) {
+										sounds.forEach(function (sound) {
+											sound.stop();
+										});
+										let primeNumbers = [2, 3, 5, 7];
+										let index = Math.floor(Math.random() * primeNumbers.length);
+										methodNumber = primeNumbers[index];
+										primeNumbers.splice(index, 1);
+										index = Math.floor(Math.random() * primeNumbers.length);
+										methodNumber *= primeNumbers[index];
+										if (methodNumber % 2 == 0 && Math.round(Math.random())) {  // makes sure there aren't too many pauses
+											methodNumber /= 2;
+											primeNumbers.splice(index, 1);
+											index = Math.floor(Math.random() * primeNumbers.length);
+											methodNumber *= primeNumbers[index];
+										}
+									}
+									if (methodNumber % 2 != 0) {
+										if (methodNumber % 3 == 0) {
+											sounds[1].start();
+											sounds[2].start();
+											setTimeout(function () {
+												sounds[1].stop();
+												sounds[2].stop();
+											}, 500);
+										}
+										if (methodNumber % 5 == 0) {
+											sounds[3].start();
+										}
+										if (methodNumber % 7 == 0) {
+											sounds[4].start();
+										}
+									}
+								}
+								time--;
                             }
                         }, 1000);
                     } else {
@@ -365,7 +442,7 @@
 							lifeCoach.speak("I'm going to turn on the alarm soon if you don't check in with me.");
 						} else if (idleTime == 1800) {  // if the website has been idle for 30 minutes
 							S.getId("start").click();
-							lifeCoach.speak("I've turned on the timer.");
+							lifeCoach.speak("I turned on the timer.");
 						}
 					} else {
 						idleTime = 0;
