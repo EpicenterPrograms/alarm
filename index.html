@@ -68,23 +68,29 @@
                         number3 = Math.round(Math.random()*10),
                         number4 = Math.round(Math.random()*10);
                     tryNumber = tryNumber===undefined ? 0 : tryNumber;
-                    if (tryNumber > 0) {
-                        remark = "WRONG!\nStart over!\n";
-                    } else {  // makes sure at least some noise is playing
-                        sounds[3].start();
-                    }
-                    if (prompt("{0}What is {1}×{2}+{3}×{4}?\n(What? You wanted to stop the noise?)".format(remark,number1,number2,number3,number4)) == number1 * number2 + number3 * number4) {
-                        changeBackground("slow");
-                        sounds.forEach(function(sound) {
-                            sound.stop();
-						});
-						wastedTime += Number(S.getId("time").value);
-						strategy = "annoy";
-                        callback();
-                    } else {
-                        tryNumber++;
-                        impede(callback, tryNumber);
-                    }
+					if (tryNumber > 0) {
+						remark = "WRONG!<br>Start over!<br>";
+					}
+					S.makeDialog("{0}What is {1}×{2}+{3}×{4}?<br>(What? You wanted to stop the noise?)<br><input type='text' class='answer' placeholder='Answer'>".format(remark, number1, number2, number3, number4), ["Submit", function () {
+						if (Number(S.getEnd(S.getClass("answer")).value) == number1 * number2 + number3 * number4) {
+							changeBackground("slow");
+							sounds.forEach(function (sound) {
+								sound.stop();
+							});
+							wastedTime += Number(S.getId("time").value);
+							strategy = "annoy";
+							callback();
+						} else {
+							tryNumber++;
+							impede(callback, tryNumber);
+						}
+					}]);
+					S.getEnd(S.getClass("answer")).addEventListener("keydown", function (event) {
+						if (event.key == "Enter") {
+							S.getClass("dialog")[0].getElementsByClassName("buttons")[0].children[0].click();
+						}
+					});
+					S.getEnd(S.getClass("answer")).focus();
                 } else {
                     changeBackground("slow");
                     sounds.forEach(function(sound) {
@@ -281,12 +287,12 @@
                         S.getId("time").value = S.getId("time").value.trim() ? Number(S.getId("time").value.trim())*60 : 400;
                         time = Number(S.getId("time").value);
                         S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
-                        document.title = "Alarm-time: " + time;
+                        document.title = time;
                         countDown = setInterval(function() {
                             if (time > 0 ) {  // if there's still time left
                                 time--;
                                 S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
-								document.title = "Alarm-time: " + time;
+								document.title = time;
 								// plays warning tones when time is running out
 								if (time == 10) {
 									sounds[0].play("a4 a4 a4", { "attack": 10, "noteLength": 100, "decay": 10 });
@@ -392,7 +398,7 @@
                         impede(function() {
                             time = Number(S.getId("time").value);
                             S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
-							document.title = "Alarm-time: " + time;
+							document.title = time;
 							if (wastedTime > Number(S.getId("time").value)) {
 								setTimeout(function () {
 									lifeCoach.speak("You've wasted {0} minutes. That's right, {0} minutes.".format(Math.round(wastedTime / 60)));
@@ -439,10 +445,10 @@
 						if (idleTime == 1200) {  // if the website has been idle for 20 minutes
 							lifeCoach.speak("It's been a while since I've noticed your activity; are you still awake?");
 						} else if (idleTime == 1500) {  // if the website has been idle for 25 minutes
-							lifeCoach.speak("I'm going to turn on the alarm soon if you don't check in with me.");
+							lifeCoach.speak("I'm going to start the countdown soon if you don't check in with me.");
 						} else if (idleTime == 1800) {  // if the website has been idle for 30 minutes
 							S.getId("start").click();
-							lifeCoach.speak("I turned on the timer.");
+							lifeCoach.speak("I started the countdown.");
 						}
 					} else {
 						idleTime = 0;
