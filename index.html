@@ -28,6 +28,7 @@
 				progress4,
 				progress5;
 			var wastedTime = 0;
+			var startOfWastedTime;  //// //////////////////////////
 			var lifeCoach = new S.Speaker();
 
 			var idleTime = 0;  // how long the website has been idle (in seconds)
@@ -229,6 +230,13 @@
 					clearInterval(progress5);
 					S.getId("customProgress").value = 0;
 				}
+			});
+
+			S.listen("customNumber", "dblclick", function () {
+				this.value = "";
+				clearInterval(interval5);
+				clearInterval(progress5);
+				S.getId("customProgress").value = 0;
 			});
 
 			S.listen("soundVolume", "change", function () {
@@ -463,7 +471,7 @@
 		<!--
         <link rel="stylesheet" href="file:///C:/Users/Robert/Documents/GitHub/standards/formatting/foundation.css">
 		-->
-		<link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting/halloween.css">
+		<link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting/thanksgiving.css">
 		<style>
 			#distractionTime {
 				width: 3em;
