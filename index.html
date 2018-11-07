@@ -463,6 +463,17 @@
 					}
 				}, 10000);
 
+				// says when the battery is low
+				if (navigator && navigator.getBattery) {
+					navigator.getBattery().then(function (battery) {
+						battery.addEventListener("levelchange", function () {
+							if (this.level < .2) {
+								lifeCoach.speak("The battery is running low.");
+							}
+						});
+					});
+				}
+
                 S.getId("timer").click();
                 changeBackground("slow");
             });
