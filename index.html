@@ -237,6 +237,7 @@
 				clearInterval(interval5);
 				clearInterval(progress5);
 				S.getId("customProgress").value = 0;
+				S.getId("customRecurrence").checked = false;
 			});
 
 			S.listen("soundVolume", "change", function () {
@@ -467,7 +468,7 @@
 				if (navigator && navigator.getBattery) {
 					navigator.getBattery().then(function (battery) {
 						battery.addEventListener("levelchange", function () {
-							if (this.level < .2) {
+							if (this.level < .2 && !this.charging) {
 								lifeCoach.speak("The battery is running low.");
 							}
 						});
@@ -482,7 +483,7 @@
 		<!--
         <link rel="stylesheet" href="file:///C:/Users/Robert/Documents/GitHub/standards/formatting/foundation.css">
 		-->
-		<link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting/thanksgiving.css">
+		<link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting/christmas.css">
 		<style>
 			#distractionTime {
 				width: 3em;
