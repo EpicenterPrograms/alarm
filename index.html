@@ -239,7 +239,37 @@
 				S.getId("customProgress").value = 0;
 				S.getId("customRecurrence").checked = false;
 			});
+			/*
+			S.listen("customRecurrence2", "click", function () {
+				if (this.checked) {
+					let time = 0;
+					let recurrence = S.getId("customNumber").value || 10;
+					interval5 = setInterval(function () {
+						timerTone.play("e5sa6");
+					}, recurrence * 60000);
+					progress5 = setInterval(function () {
+						if (time >= recurrence * 60000) {
+							time = recurrence * 600;
+						} else {
+							time += recurrence * 600;
+						}
+						S.getId("customProgress").value = time / (recurrence * 60000);
+					}, recurrence * 600);
+				} else {
+					clearInterval(interval5);
+					clearInterval(progress5);
+					S.getId("customProgress").value = 0;
+				}
+			});
 
+			S.listen("customNumber", "dblclick", function () {
+				this.value = "";
+				clearInterval(interval5);
+				clearInterval(progress5);
+				S.getId("customProgress").value = 0;
+				S.getId("customRecurrence2").checked = false;
+			});
+			*/
 			S.listen("soundVolume", "change", function () {
 				let volume = Number(this.value) / 100;
 				sounds.forEach(function (sound) {
@@ -483,7 +513,6 @@
 		<!--
         <link rel="stylesheet" href="file:///C:/Users/Robert/Documents/GitHub/standards/formatting/foundation.css">
 		-->
-		<link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting/christmas.css">
 		<style>
 			#distractionTime {
 				width: 3em;
@@ -560,6 +589,12 @@
 				<input type="checkbox" id="customRecurrence">
 				<label for="customRecurrence">Make a tone every <input type="text" id="customNumber"> minutes</label><br>
 				<progress id="customProgress" value="0"></progress>
+				<!--
+				<br>
+				<input type="checkbox" id="customRecurrence2">
+				<label for="customRecurrence2">Make a different tone every <input type="text" id="customNumber"> minutes</label><br>
+				<progress id="customProgress" value="0"></progress>
+				-->
 			</div>
         </main>
     </body>
