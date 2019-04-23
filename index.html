@@ -27,8 +27,8 @@
 				progress3,
 				progress4,
 				progress5;
-			var wastedTime = 0;
-			var startOfWastedTime;  //// //////////////////////////
+			var wastedTime = 0;  ////
+			var startOfWastedTime;
 			var lifeCoach = new S.Speaker();
 
 			var idleTime = 0;  // how long the website has been idle (in seconds)
@@ -99,6 +99,7 @@
 					});
 					if (time > 3) {
 						wastedTime = 0;
+						startOfWastedTime = new Date().getTime();
 					}
                     callback();
                 }
@@ -326,7 +327,8 @@
                         S.getId("time").value = S.getId("time").value.trim() ? Number(S.getId("time").value.trim())*60 : 400;
                         time = Number(S.getId("time").value);
                         S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
-                        document.title = time;
+						document.title = time;
+						startOfWastedTime = new Date().getTime();
                         countDown = setInterval(function() {
                             if (time > 0 ) {  // if there's still time left
                                 time--;
@@ -438,9 +440,14 @@
                             time = Number(S.getId("time").value);
                             S.getTag("h2")[0].innerHTML = "Seconds left: " + time;
 							document.title = time;
-							if (wastedTime > Number(S.getId("time").value)) {
+							if (false && wastedTime > Number(S.getId("time").value)) {  ////
 								setTimeout(function () {
 									lifeCoach.speak("You've wasted {0} minutes. That's right, {0} minutes.".format(Math.round(wastedTime / 60)));
+								}, 1500);
+							}
+							if (new Date().getTime() - startOfWastedTime > Number(S.getId("time").value) * 1000) {
+								setTimeout(function () {
+									lifeCoach.speak("You've wasted {0} minutes. That's right, {0} minutes.".format(Math.round(new Date().getTime()-startOfWastedTime/60000)));
 								}, 1500);
 							}
                         });
