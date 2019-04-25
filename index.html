@@ -447,7 +447,7 @@
 							}
 							if (new Date().getTime() - startOfWastedTime > Number(S.getId("time").value) * 1000) {
 								setTimeout(function () {
-									lifeCoach.speak("You've wasted {0} minutes. That's right, {0} minutes.".format(Math.round(new Date().getTime()-startOfWastedTime/60000)));
+									lifeCoach.speak("You've wasted {0} minutes. That's right, {0} minutes.".format(Math.round((new Date().getTime()-startOfWastedTime)/60000)));
 								}, 1500);
 							}
                         });
