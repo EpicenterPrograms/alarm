@@ -486,22 +486,30 @@
 				});
 
 				// tracks idle time
-				setInterval(function () {
-					idleTime += 10;
-					let time = new Date().getHours();
-					if (time > 21 || time < 8) {
-						if (idleTime == 1200) {  // if the website has been idle for 20 minutes
-							lifeCoach.speak("It's been a while since I've noticed your activity; are you still awake?");
-						} else if (idleTime == 1500) {  // if the website has been idle for 25 minutes
-							lifeCoach.speak("I'm going to start the countdown soon if you don't check in with me.");
-						} else if (idleTime == 1800) {  // if the website has been idle for 30 minutes
-							S.getId("start").click();
-							lifeCoach.speak("I started the countdown.");
-						}
+				let latenessTracker;
+				S.listen("trackLateness", "click", function () {
+					if (this.checked) {
+						latenessTracker = setInterval(function () {
+							idleTime += 10;
+							let time = new Date().getHours();
+							if (time > 21 || time < 8) {
+								if (idleTime == 1200) {  // if the website has been idle for 20 minutes
+									lifeCoach.speak("It's been a while since I've noticed your activity; are you still awake?");
+								} else if (idleTime == 1500) {  // if the website has been idle for 25 minutes
+									lifeCoach.speak("I'm going to start the countdown soon if you don't check in with me.");
+								} else if (idleTime == 1800) {  // if the website has been idle for 30 minutes
+									S.getId("start").click();
+									lifeCoach.speak("I started the countdown.");
+								}
+							} else {
+								idleTime = 0;
+							}
+						}, 10000);
 					} else {
-						idleTime = 0;
+						clearInterval(latenessTracker);
 					}
-				}, 10000);
+				});
+				S.getId("trackLateness").click();
 
 				// says when the battery is low
 				if (navigator && navigator.getBattery) {
@@ -573,6 +581,9 @@
             <button id="timer">
                 Start eye-strain timer
             </button>
+			<br>
+			<br>
+			<input type="checkbox" id="trackLateness"> Track lateness
 			<br>
 			<br>
 			<button id="distractionButton">
