@@ -35,6 +35,8 @@
 			var focused = true;  // whether the tab that has the website is currently focused //// unused
 			var visits = 1;  // how many times the website was visited since being loaded
 
+			var advancedSettingsSection = document.createElement("div");  // holds the advanced settings section (//// in the future)
+
 
 
             function changeBackground(speed) {
@@ -47,18 +49,20 @@
                     increment = .8;
                     repeat = 8;
                 }
-                if (colorChange) {
-                    clearInterval(colorChange);
-                }
-                colorChange = setInterval(function() {
-                    if (colorNumber > 100) {
-                        colorNumber = 0;
-                    }
-                    var newColor = S.colorCode(null, colorNumber, [0,0,255], [255,0,255], [255,0,0], [255,255,0], [0,255,0], [0,255,255], [0,0,255]);
-                    document.body.style.backgroundImage = "repeating-linear-gradient({0}, white 100vh, {0} 200vh)".format(newColor);
-                    // The gradient is basically an image.
-                    colorNumber += increment;
-                }, repeat);
+				clearInterval(colorChange);
+				if (speed.toLowerCase() == "none") {
+					document.body.style.backgroundImage = "";
+				} else {
+					colorChange = setInterval(function () {
+						if (colorNumber > 100) {
+							colorNumber = 0;
+						}
+						var newColor = S.colorCode(null, colorNumber, [0, 0, 255], [255, 0, 255], [255, 0, 0], [255, 255, 0], [0, 255, 0], [0, 255, 255], [0, 0, 255]);
+						document.body.style.backgroundImage = "repeating-linear-gradient({0}, white 100vh, {0} 200vh)".format(newColor);
+						// The gradient is basically an image.
+						colorNumber += increment;
+					}, repeat);
+				}
 			}
 
             function impede(callback, tryNumber) {
@@ -74,7 +78,11 @@
 					}
 					S.makeDialog("{0}What is {1}×{2}+{3}×{4}?<br>(What? You wanted to stop the noise?)<br><input type='text' class='answer' placeholder='Answer'>".format(remark, number1, number2, number3, number4), ["Submit", function () {
 						if (Number(S.getEnd(S.getClass("answer")).value) == number1 * number2 + number3 * number4) {
-							changeBackground("slow");
+							if (S.getId("changeBackground").checked) {
+								changeBackground("slow");
+							} else {
+								changeBackground("none");
+							}
 							sounds.forEach(function (sound) {
 								sound.stop();
 							});
@@ -92,8 +100,12 @@
 						}
 					});
 					S.getEnd(S.getClass("answer")).focus();
-                } else {
-                    changeBackground("slow");
+				} else {
+					if (S.getId("changeBackground").checked) {
+						changeBackground("slow");
+					} else {
+						changeBackground("none");
+					}
                     sounds.forEach(function(sound) {
                         sound.stop();
 					});
@@ -292,6 +304,18 @@
 			document.addEventListener("mousemove", function () { idleTime = 0; });
 			document.addEventListener("mouseup", function () { idleTime = 0; });
 
+			S.listen("changeBackground", "click", function () {
+				if (this.checked) {
+					if (time < 0) {
+						changeBackground("fast");
+					} else {
+						changeBackground("slow");
+					}
+				} else {
+					changeBackground("none");
+				}
+			});
+
 
 
 			S.onLoad(function () {
@@ -470,7 +494,11 @@
 						S.makeDialog("Are you sure you want to stop the alarm?",
 							["Yes", function () {
 								clearInterval(countDown);
-								changeBackground("slow");
+								if (S.getId("changeBackground").checked) {
+									changeBackground("slow");
+								} else {
+									changeBackground("none");
+								}
 								sounds.forEach(function (sound) {
 									sound.stop();
 								});
@@ -522,8 +550,10 @@
 					});
 				}
 
-                S.getId("timer").click();
-                changeBackground("slow");
+				S.getId("timer").click();
+				if (S.getId("changeBackground").checked) {
+					changeBackground("slow");
+				}
             });
         </script>
         <link rel="stylesheet" href="https://epicenterprograms.github.io/standards/formatting/foundation.css">
@@ -558,6 +588,9 @@
 				border-radius: .25rem;
 				background: lightgray;
 			}
+			#advancedSettings {
+				margin-top: 1.5em;
+			}
 		</style>
     </head>
     <body>
@@ -582,9 +615,6 @@
             <button id="timer">
                 Start eye-strain timer
             </button>
-			<br>
-			<br>
-			<input type="checkbox" id="trackLateness"> Track lateness
 			<br>
 			<br>
 			<button id="distractionButton">
@@ -616,6 +646,14 @@
 				<label for="customRecurrence2">Make a different tone every <input type="text" id="customNumber"> minutes</label><br>
 				<progress id="customProgress" value="0"></progress>
 				-->
+			</div>
+			<button id="advancedSettings" disabled>
+				Advanced settings
+			</button>
+			<br>
+			<div id="advancedSettingsSection">
+				<input type="checkbox" id="trackLateness"> Track lateness
+				<input type="checkbox" id="changeBackground" checked> Change background color
 			</div>
         </main>
     </body>
