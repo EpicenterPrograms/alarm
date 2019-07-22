@@ -181,7 +181,7 @@
 				}
 			});
 
-			S.listen("fiveMinutes", "click", function() {
+			S.listen("fiveMinutes", "change", function() {
 				if (this.checked) {
 					let time = 0;
 					interval3 = setInterval(function() {
@@ -202,7 +202,7 @@
 				}
 			});
 
-			S.listen("oneMinute", "click", function() {
+			S.listen("oneMinute", "change", function() {
 				if (this.checked) {
 					let time = 0;
 					interval4 = setInterval(function() {
@@ -223,7 +223,7 @@
 				}
 			});
 
-			S.listen("customRecurrence", "click", function() {
+			S.listen("customRecurrence", "change", function() {
 				if (this.checked) {
 					let time = 0;
 					let recurrence = S.getId("customNumber").value || 10;
@@ -304,7 +304,7 @@
 			document.addEventListener("mousemove", function () { idleTime = 0; });
 			document.addEventListener("mouseup", function () { idleTime = 0; });
 
-			S.listen("changeBackground", "click", function () {
+			S.listen("changeBackground", "change", function () {
 				if (this.checked) {
 					if (time < 0) {
 						changeBackground("fast");
@@ -515,7 +515,7 @@
 
 				// tracks idle time
 				let latenessTracker;
-				S.listen("trackLateness", "click", function () {
+				S.listen("trackLateness", "change", function () {
 					if (this.checked) {
 						latenessTracker = setInterval(function () {
 							idleTime += 10;
@@ -651,8 +651,8 @@
 			</button>
 			<br>
 			<div id="advancedSettingsSection">
-				<input type="checkbox" id="trackLateness"> Track lateness
-				<input type="checkbox" id="changeBackground" checked> Change background color
+				<input type="checkbox" id="trackLateness"> <label for="tarckLateness">Track lateness</label>
+				<input type="checkbox" id="changeBackground" checked> <label for="changeBackground">Change background color</label>
 			</div>
         </main>
     </body>
