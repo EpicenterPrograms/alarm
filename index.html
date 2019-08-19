@@ -295,14 +295,36 @@
 			// sets up idleness tracking
 			window.addEventListener("focus", function () {
 				focused = true;
+				if (idleTime >= 1200) {
+					lifeCoach.shush();  // stops any potential lecturing from the life coach
+				}
 				idleTime = 0;
 			});
 			window.addEventListener("blur", function () {
 				focused = false;
+				if (idleTime >= 1200) {
+					lifeCoach.shush();
+				}
 				idleTime = 0;
 			});
-			document.addEventListener("mousemove", function () { idleTime = 0; });
-			document.addEventListener("mouseup", function () { idleTime = 0; });
+			document.addEventListener("mousemove", function () {
+				if (idleTime >= 1200) {
+					lifeCoach.shush();
+				}
+				idleTime = 0;
+			});
+			document.addEventListener("mouseup", function () {
+				if (idleTime >= 1200) {
+					lifeCoach.shush();
+				}
+				idleTime = 0;
+			});
+			document.addEventListener("scroll", function () {
+				if (idleTime >= 1200) {
+					lifeCoach.shush();
+				}
+				idleTime = 0;
+			});
 
 			S.listen("changeBackground", "change", function () {
 				if (this.checked) {
