@@ -121,11 +121,18 @@
                 if (this.innerHTML.trim() == "Start eye-strain timer") {
                     this.innerHTML = "Stop eye-strain timer";
                     interval1 = setInterval(function() {
-                        timerTone.play("ae5a5");
-						interval2 = setTimeout(function() {
-							timerTone.play("a5e5a");
-						}, 25000);  // 25 seconds
-                    }, 1224000);  // 20.4 minutes
+						timerTone.play("ae5a5");
+						let timePassed = 0;
+						interval2 = setInterval(function () {
+							if (timePassed < 30000) {
+								timerTone.play("a5");
+								timePassed += 5000;
+							} else {
+								timerTone.play("a5e5a");
+								clearInterval(interval2);
+							}
+						}, 5000);  // 5 seconds (* 6)
+                    }, 1230000);  // 20.5 minutes
                 } else {
                     this.innerHTML = "Start eye-strain timer";
                     clearInterval(interval2);
@@ -559,7 +566,6 @@
 						clearInterval(latenessTracker);
 					}
 				});
-				S.getId("trackLateness").click();
 
 				// says when the battery is low
 				if (navigator && navigator.getBattery) {
